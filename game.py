@@ -1,7 +1,4 @@
-import pygame
-import random
-import sys
-
+import pygame, sys, random
 import agent as ag
 import main as m
 
@@ -26,6 +23,7 @@ class Game:
         gamma = 0.9
         epsilon = 0.01
 
+
         # game objects
         self.ball = pygame.Rect(self.screen_width / 2 - 15, self.screen_height / 2 - 15, 30, 30)
         self.player = pygame.Rect(self.screen_width - 10, self.screen_height / 2 - 70, 10, 140)
@@ -36,9 +34,10 @@ class Game:
         # agent's side :
         self.AgentControl = self.opponent
         if self.gameType == 3:
-            # secondary agent for RL vs RL
+            # sedondary agent for RL vs RL
             self.agent2 = ag.Qlearning(alpha, gamma, epsilon, 820, 140)
             self.OtherAgentControl = self.player
+
 
         self.bg_color = pygame.Color("grey12")
         self.light_grey = (200, 200, 200)
@@ -75,7 +74,7 @@ class Game:
             self.ball_restart()
             self.roundIsDone = True
 
-        # Collision
+        # Collison
         if self.ball.colliderect(self.player) or self.ball.colliderect(self.opponent):
             self.ball_speed_x *= -1
 
@@ -104,7 +103,9 @@ class Game:
         self.ball_speed_y *= random.choice((1, -1))
         self.ball_speed_y *= random.choice((1, -1))
 
-    def play(self):
+    def play(self, episodes):
+        # game loop
+        episode = 0
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -165,6 +166,6 @@ class Game:
     def getBall(self):
         return self.ball
 
-    def AgentRLControl(self, agent_control, agent, ball):
-        s = agent.get_state_from_pos(agent_control.centery, 140, self.screen_height)
-        agent_control.y = agent.update(s, agent_control, ball)
+    def AgentRLControl(self,agentControl,agent,ball):
+        s = agent.get_state_from_pos(agentControl.centery, 140, self.screen_height)
+        agentControl.y = agent.update(s, agentControl, ball)
